@@ -8,12 +8,19 @@
 5. The event system: $on, $emit, and $broadcast
 
 #### Watching Object properties: $watch and $digest
-$watch and $digest are two sides of the same coin. Together they form the core of what the digest cycle is all about: Reacting to changes in data.
+`$watch` and `$digest` are two sides of the same coin. Together they form the core of what the *digest cycle* is all about: Reacting to changes in data.
 
-With $watch you can attach what is called a watcher to a scope. A watcher is something that is notified when a change occurs on the scope. You can create a watcher by calling $watch with two arguments (functions):
--- A watch function, which specifies the piece of data you're interested in.
--- A listener function which will be called whenever the data changes.
+With `$watch` you can attach what is called a watcher to a scope. A watcher is something that is notified when a change occurs on the scope. You can create a watcher by calling $watch with two arguments (functions):
+  - A watch function, which specifies the piece of data you're interested in.
+  - A listener function which will be called whenever the data changes.
 
 The other side of the coin is the $digest function. It iterates over all the watchers that have been attached on the scope, and runs their watch and listener functions accordingly.
 
-Dirty-checking: To check if the values specified by the watch function have actually changed, and only then call the respective listener function. 
+**Dirty-checking**: To check if the values specified by the watch function have actually changed, and only then call the respective listener function.
+
+*General form watch functions usually take*: Pluck some value from the scope and return it.
+
+#### Important performance characteristics that Angular scopes have:
+* Attaching data to a scope does not by itself have an impact on performance. If no watcher is watching a property, it doesn't matter if it's on scope or not. Angular does not iterate over the properties of a scope. It iterates over the watches.
+
+* Every watch function is called during every `$digest`. For this reason, it's a good idea to pay attention to the number of watches you have, as well as the performance of each individual watch function or expression.
