@@ -11,32 +11,42 @@ function Scope() {
 }
 
 Scope.prototype.$watch = function(watchFn, listenerFn, valueEq) {
+  var self = this;
   var watcher = {
     watchFn: watchFn,
     listenerFn: listenerFn || function() { },
     valueEq: !!valueEq, // equivalent to Boolean(valueEq)
     last: initWatchVal
   };
-  this.$$watchers.push(watcher);
+  this.$$watchers.unshift(watcher); // watches are added to the beginnning to ensure they're not skipped during digest cycle.
   this.$$lastDirtyWatch = null;
+  return function() {
+    var index = self.$$watchers.indexOf(watcher);
+    if (index >= 0) {
+      self.$$watchers.splice(index, 1);
+      self.$$lastDirtyWatch = null;
+    }
+  };
 };
 
 Scope.prototype.$$digestOnce = function() {
   var self = this;
   var newValue, oldValue, dirty;
-  _.forEach(this.$$watchers, function(watcher) {
+  _.forEachRight(this.$$watchers, function(watcher) {
     try {
-      newValue = watcher.watchFn(self);
-      oldValue = watcher.last;
-      if (!self.$$areEqual(newValue, oldValue, watcher.valueEq)) {
-        self.$$lastDirtyWatch = watcher;
-        watcher.last = (watcher.valueEq ? _.cloneDeep(newValue) : newValue);
-        watcher.listenerFn(newValue,
-          (oldValue === initWatchVal ? newValue : oldValue),
-          self);
-        dirty = true;
-      } else if (self.$$lastDirtyWatch === watcher) {
-        return false; // explicitly returning false in a _.forEach loop causes LoDash to short circuit the loop and exit immediately.
+      if (watcher) {
+        newValue = watcher.watchFn(self);
+        oldValue = watcher.last;
+        if (!self.$$areEqual(newValue, oldValue, watcher.valueEq)) {
+          self.$$lastDirtyWatch = watcher;
+          watcher.last = (watcher.valueEq ? _.cloneDeep(newValue) : newValue);
+          watcher.listenerFn(newValue,
+            (oldValue === initWatchVal ? newValue : oldValue),
+            self);
+          dirty = true;
+        } else if (self.$$lastDirtyWatch === watcher) {
+          return false; // explicitly returning false in a _.forEach loop causes LoDash to short circuit the loop and exit immediately.
+        }
       }
     } catch(e) {
       console.error(e);

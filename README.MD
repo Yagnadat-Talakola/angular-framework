@@ -21,6 +21,17 @@ The other side of the coin is the $digest function. It iterates over all the wat
 *General form watch functions usually take*: Pluck some value from the scope and return it.
 
 #### Important performance characteristics that Angular scopes have:
-* Attaching data to a scope does not by itself have an impact on performance. If no watcher is watching a property, it doesn't matter if it's on scope or not. Angular does not iterate over the properties of a scope. It iterates over the watches.
+- Attaching data to a scope does not by itself have an impact on performance. If no watcher is watching a property, it doesn't matter if it's on scope or not. Angular does not iterate over the properties of a scope. It iterates over the watches.
 
-* Every watch function is called during every `$digest`. For this reason, it's a good idea to pay attention to the number of watches you have, as well as the performance of each individual watch function or expression.
+- Every watch function is called during every `$digest`. For this reason, it's a good idea to pay attention to the number of watches you have, as well as the performance of each individual watch function or expression.
+
+*Destroying a watch*
+The way Angular implements this is actually quite clever: The `$watch` function in Angular has a return value. It is a function, when invoked, destroys the watch
+that was registered. If a user wants to be able to remove a watch later, they just need to keep hold of the function returned when they registered the watch, and then call it once the watch is no longer needed.
+
+#### Summary: Scopes (Chapter 1)
+- The two-sided process underlying Angular's dirty checking: `$watch` and `$digest`
+- The dirty-checking loop and the TTL mechanism for short-circuiting it.
+- The difference between reference-based and value-based comparison.
+- Exception handling in the Angular digest.
+- Destroying watches so they won't be executed again.  
