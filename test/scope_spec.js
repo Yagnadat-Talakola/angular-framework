@@ -409,7 +409,37 @@ describe('Scope', function() {
 
       expect(result).toBe(44);
     });
+  });
 
+  describe('$apply', function() {
+
+    var scope;
+
+    beforeEach(function() {
+      scope = new Scope();
+    });
+
+    it('executes the given function and starts the digest', function() {
+      scope.aValue = 'someValue';
+      scope.counter = 0;
+
+      scope.$watch(
+        function(scope) {
+          return scope.aValue;
+        },
+        function(newValue, oldValue, scope) {
+          scope.counter++;
+        }
+      );
+
+      scope.$digest();
+      expect(scope.counter).toBe(1);
+
+      scope.$apply(function() {
+        scope.aValue = 'someOtherValue';
+      });
+      expect(scope.counter).toBe(2);
+    });
     
   });
 
