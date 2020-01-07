@@ -35,3 +35,7 @@ that was registered. If a user wants to be able to remove a watch later, they ju
 - The difference between reference-based and value-based comparison.
 - Exception handling in the Angular digest.
 - Destroying watches so they won't be executed again.  
+
+## Scope Methods
+
+*$eval*: Takes a function as an argument and immediately executes that function giving it the scope itself as an argument. It then returns whatever the function returned. `$eval` also takes an optional second argument, which it passes as-is to the function. 
