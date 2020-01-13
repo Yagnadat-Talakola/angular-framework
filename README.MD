@@ -41,3 +41,5 @@ that was registered. If a user wants to be able to remove a watch later, they ju
 *$eval*: Takes a function as an argument and immediately executes that function giving it the scope itself as an argument. It then returns whatever the function returned. `$eval` also takes an optional second argument, which it passes as-is to the function.
 
 *$apply*: Takes a function as an argument. It executes that function using `$eval`, and then kick-starts the digest cycle by invoking `$digest`.
+
+*$evalAsync*: Takes a function and schedules it to run later but still during the ongoing digest.
