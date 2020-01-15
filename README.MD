@@ -43,3 +43,5 @@ that was registered. If a user wants to be able to remove a watch later, they ju
 *$apply*: Takes a function as an argument. It executes that function using `$eval`, and then kick-starts the digest cycle by invoking `$digest`.
 
 *$evalAsync*: Takes a function and schedules it to run later but still during the ongoing digest.
+
+*Scope Phases*: A string attribute in the scope that stores information about what's currently going on. 
