@@ -405,7 +405,7 @@ describe('Scope', function() {
       expect(scope.phaseInListenerFunction).toBe('$digest');
       expect(scope.phaseInApplyFunction).toBe('$apply');
     });
-    
+
   });
 
   describe('$eval', function() {
@@ -549,6 +549,27 @@ describe('Scope', function() {
       );
 
       expect(function() { scope.$digest(); }).toThrow();
+    });
+
+    it('schedules a digest in $evalAsync', function(done) {
+      scope.aValue = 'abc';
+      scope.counter = 0;
+
+      scope.$watch(
+        function(scope) { return scope.aValue; },
+        function(newValue, oldValue, scope) {
+          scope.counter++;
+        }
+      );
+
+      scope.$evalAsync(function(scope) {
+      });
+
+      expect(scope.counter).toBe(0);
+      setTimeout(function() {
+        expect(scope.counter).toBe(1);
+        done();
+      }, 50);
     });
 
   });
