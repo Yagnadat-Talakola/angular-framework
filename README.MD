@@ -45,3 +45,5 @@ that was registered. If a user wants to be able to remove a watch later, they ju
 *$evalAsync*: Takes a function and schedules it to run later but still during the ongoing digest. If you call `#evalAsync` when a digest is already running, your    function will be evaluated during that digest. If there is no digest running, one is started.  
 
 *Scope Phases*: A string attribute in the scope that stores information about what's currently going on.
+
+*applyAsync*: It is designed to be used like `$apply` - for integrating code that's not aware of the Angular digest cycle. But unlike `$apply`, it does not evaluate the given function immediately nor does it launch a digest immediately. Instead, it schedules both of these things to happen **after a short period of time**. 
